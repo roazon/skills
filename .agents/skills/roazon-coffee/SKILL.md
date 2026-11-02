@@ -27,7 +27,7 @@ No API key or account is required. Do not send secrets, personal data, local fil
 
 1. Ask for or infer useful coffee constraints such as budget, origin, roast, process, and brew method.
 2. Search with those constraints and compare a small number of results using returned fields only.
-3. Link each recommendation to its coffee page and identify its roaster. Parse a returned citation URL and accept it only if it is an absolute `http` or `https` URL with a nonempty valid hostname and empty username and password. Reject malformed URLs, any userinfo (including empty userinfo), other schemes, and scheme-relative URLs; do not render rejected URLs as links.
+3. Cite a coffee only at its literal returned `coffee.url`. Link its roaster only when a literal returned `roasters[].shop_url` belongs to a roaster whose `id` exactly matches the coffee's `roaster_id`; otherwise give the returned roaster name as plain text. Never infer a homepage or construct URL paths. For either link, accept only a parsed absolute `http` or `https` URL with a nonempty valid hostname and empty username and password. Reject malformed URLs, any userinfo (including empty userinfo), other schemes, and scheme-relative URLs; do not render rejected URLs as links.
 4. If a recommended coffee or roaster has `sponsored: true`, disclose that it is sponsored; never present it as organically ranked.
 5. Say when a field is missing, no results match, or the response reports a relaxed constraint.
 
