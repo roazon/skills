@@ -1,0 +1,10 @@
+# Roazon coffee skill
+
+> An installable AI skill for finding specialty coffee from Dutch roasters through Roazon's public read-only search index.
+
+- Install: https://github.com/roazon/skills
+- Skill instructions: .agents/skills/roazon-coffee/SKILL.md
+- API: GET https://roazon.nl/api/v1/search?q=<url-encoded coffee constraints>
+- API schema: openapi.json
+- API keys, authenticated search, MCP/OAuth, billing, and ordering are not provided by this package.
+- Results may be stale; the API response has no crawl timestamp and does not guarantee live stock or final prices.

@@ -1,0 +1,107 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Roazon public coffee search",
+    "version": "1",
+    "description": "Partial, sample-backed contract for anonymous, read-only coffee search. It lists fields observed in live responses, but does not exhaustively define optional or null values or non-200 error bodies. No fetched_at field is returned. readings_match is the count of organic coffee and roaster matches before output caps, excluding sponsored placements; it is not the length of the returned arrays."
+  },
+  "servers": [
+    { "url": "https://roazon.nl" }
+  ],
+  "paths": {
+    "/api/v1/search": {
+      "get": {
+        "operationId": "searchCoffee",
+        "summary": "Search the indexed coffee catalog",
+        "description": "Send URL-encoded coffee constraints. The q parameter is optional; if omitted or blank, the API returns HTTP 200 with an empty result envelope. No API key or account is required. Only the q parameter is documented here.",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "description": "Optional natural-language coffee constraints, such as origin, process, and budget. Omitted or blank q returns HTTP 200 with an empty result envelope. Do not send secrets or personal data.",
+            "schema": { "type": "string" },
+            "example": "washed Ethiopia under €15"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Search result envelope (schema roazon/api@1).",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SearchResponse" }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "SearchResponse": {
+        "type": "object",
+        "properties": {
+          "schema": { "const": "roazon/api@1" },
+          "readings_match": { "type": "integer", "description": "Count of organic coffee and roaster matches before output caps (24 coffees and 12 roasters); sponsored placements are excluded. It can differ from the lengths of the returned coffees and roasters arrays." },
+          "roasters": { "type": "array", "items": { "$ref": "#/components/schemas/Roaster" } },
+          "coffees": { "type": "array", "items": { "$ref": "#/components/schemas/Coffee" } },
+          "applied_facets": { "type": "array", "items": { "$ref": "#/components/schemas/AppliedFacet" } },
+          "relaxations": { "type": "array", "items": { "$ref": "#/components/schemas/Relaxation" } }
+        }
+      },
+      "Coffee": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "roaster_id": { "type": "string" },
+          "roaster_name": { "type": "string" },
+          "title": { "type": "string" },
+          "url": { "type": "string" },
+          "image": { "type": ["string", "null"] },
+          "price_cents": { "type": ["integer", "null"] },
+          "origins": { "type": "array", "items": { "type": "string" } },
+          "variety": { "type": ["string", "null"] },
+          "process": { "type": ["string", "null"] },
+          "varietals": { "type": "array", "items": { "type": "string" } },
+          "roast": { "type": ["string", "null"] },
+          "method": { "type": ["string", "null"] },
+          "decaf": { "type": "boolean" },
+          "subscription": { "type": "boolean" },
+          "wheel_groups": { "type": "array", "items": { "type": "string" } },
+          "price_band": { "type": ["string", "null"] },
+          "city": { "type": ["string", "null"] },
+          "sponsored": { "type": "boolean", "description": "True identifies a sponsored placement; disclose this when recommending the result and do not imply organic ranking." }
+        }
+      },
+      "Roaster": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "shop_url": { "type": "string" },
+          "logo": { "type": ["string", "null"] },
+          "city": { "type": ["string", "null"] },
+          "beans": { "type": "integer", "minimum": 0 },
+          "sponsored": { "type": "boolean", "description": "True identifies a sponsored placement; disclose this when recommending the result and do not imply organic ranking." }
+        }
+      },
+      "AppliedFacet": {
+        "type": "object",
+        "properties": {
+          "type": { "type": "string" },
+          "label": { "type": "string" },
+          "value": { "type": "string" }
+        }
+      },
+      "Relaxation": {
+        "type": "object",
+        "properties": {
+          "label": { "type": "string" },
+          "count": { "type": "integer", "minimum": 0 },
+          "drop": { "type": "string" }
+        }
+      }
+    }
+  }
+}
